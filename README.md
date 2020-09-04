@@ -64,6 +64,12 @@ Through Docker:
 docker run -it --rm -p 8080:8080 commit451/skyhook
 ```
 
+Also through Docker:
+
+```
+docker run -it --rm -p 8080:8080 docker.pkg.github.com/project-eos/skyhook
+```
+
 ## Deploying
 - [Docker](docs/docker)
 - [Google Cloud](docs/gcloud)
