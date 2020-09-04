@@ -24,6 +24,16 @@ class BitBucketServer extends BaseProvider {
         return strArray.join(' ')
     }
 
+    private sanitizeUsernames: string
+    private replacementUsername: string
+    private baseUrl: string
+
+    private getEnvironmentVariables() {
+        this.sanitizeUsernames = process.env.SANITIZE_USERNAMES
+        this.replacementUsername = process.env.USERNAME_REPLACEMENT
+        this.baseUrl = process.env.BITBUCKET_SERVER_BASE
+    }
+
     constructor() {
         super()
         this.setEmbedColor(0x205081)
@@ -179,7 +189,12 @@ class BitBucketServer extends BaseProvider {
 
     private extractAuthor(): EmbedAuthor {
         const author = new EmbedAuthor()
-        author.name = this.body.actor.displayName
+        if (this.sanitizeUsernames === 'true') {
+            author.name = this.replacementUsername
+        } else {
+            author.name = this.body.actor.displayName
+        }
+
         author.icon_url = 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/44_Bitbucket_logo_logos-512.png'
         return author
     }
@@ -237,8 +252,16 @@ class BitBucketServer extends BaseProvider {
     }
 
     private extractBaseLink() {
-        const actorLink = this.body.actor.links.self[0].href
-        return actorLink.substring(0, actorLink.indexOf('/user'))
+        let baseurl;
+        if (this.baseUrl) {
+         baseurl = this.baseUrl   
+         return baseurl;
+
+        } else {
+            const actorLink = this.body.actor.links.self[0].href
+            return actorLink.substring(0, actorLink.indexOf('/user'))
+        }
+        
     }
 }
 
