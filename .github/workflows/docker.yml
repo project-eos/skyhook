@@ -1,0 +1,19 @@
+name: 'Build Dockerfile'
+on: 
+  push:
+    branches: [ master ]
+jobs:
+  dockerbuild:
+    name: 'Dockerfile Build'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: 'Build Image'
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: project-eos/skyhook/skyhook
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          workdir: '/home/runner/work/skyhook/skyhook'
+          tags: 'latest,master'
